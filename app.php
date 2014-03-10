@@ -2,7 +2,12 @@
 
 require_once 'vendor/autoload.php';
 
+use RedBean_Facade as R;
+
 $config = include __DIR__ . '/config/core.php';
+$db_config = include __DIR__ . '/config/database.php';
+
+R::setup($db_config['dsl'], $db_config['username'], $db_config['password']);
 
 $app = new \Slim\Slim(array(
     'mode'           => $config['mode'],
@@ -72,19 +77,38 @@ $app->get('/stars', function () use ($app) {
     // $releases = $client->api('repos')->releases()->all($starred['owner'], $starred['name']);
 
     $page = 1;
-    $all_starred = array();
-    $has_next_page = true;
-    while ($has_next_page) {
-        $all_starred = array_merge($all_starred, $app->github->api('me')->starred($page));
-        $has_next_page = $app->github->getHttpClient()->getLastResponse()
+    $allStarred = array();
+    $hasNextPage = true;
+    while ($hasNextPage) {
+        $allStarred = array_merge($allStarred, $app->github->api('me')->starred($page));
+        $hasNextPage = $app->github->getHttpClient()->getLastResponse()
             ->getHeader('link')->getLink('next');
         $page++;
+    }
+
+    foreach ($allStarred as $starred) {
+        $repository = R::findOne('repository', 'full_name = ?', array($starred['full_name']));
+        if (!$repository) {
+            $repository = R::dispense('repository');
+            $repository->full_name = $starred['full_name'];
+            $repository->owner = $starred['owner']['login'];
+            $repository->name = $starred['name'];
+        }
+        foreach ($emails as $emailAddress) {
+            $email = R::findOne('email', 'address = ?', array($emailAddress));
+            if (!$email) {
+                $email = R::dispense('email');
+                $email->address = $emailAddress;
+            }
+            $repository->sharedEmailList[] = $email;
+        }
+        R::store($repository);
     }
 
     return $app->render(
         'stars.html.php',
         array(
-            'starred' => $all_starred,
+            'starred' => $allStarred,
         )
     );
 });

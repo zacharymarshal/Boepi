@@ -2,6 +2,7 @@
   "require": {
     "guzzle/guzzle": "3.*",
     "knplabs/github-api": "1.*",
-    "slim/slim": "2.*"
+    "slim/slim": "2.*",
+    "gabordemooij/redbean": "dev-master"
   }
 }

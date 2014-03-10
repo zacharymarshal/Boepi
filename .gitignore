@@ -1,4 +1,5 @@
 .DS_Store
 vendor/*
-config/core.php
 web/.htaccess
+config/core.php
+config/database.php
