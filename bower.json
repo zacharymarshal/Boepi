@@ -1,0 +1,23 @@
+{
+  "name": "Boepi",
+  "version": "0.0.0",
+  "homepage": "https://github.com/zacharyrankin/Boepi",
+  "authors": [
+    "Zachary Rankin <rankin.zachary@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "assets/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "jquery#2",
+    "bootstrap": "bootstrap#3",
+    "font-awesome": "font-awesome#4"
+  }
+}

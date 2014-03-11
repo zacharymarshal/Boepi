@@ -3,3 +3,5 @@ vendor/*
 web/.htaccess
 config/core.php
 config/database.php
+node_modules/*
+assets/bower_components/*

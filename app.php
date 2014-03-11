@@ -3,6 +3,7 @@
 require_once 'vendor/autoload.php';
 
 use RedBean_Facade as R;
+use Lstr\Assetrinc\AssetService;
 
 $config = include __DIR__ . '/config/core.php';
 $db_config = include __DIR__ . '/config/database.php';
@@ -20,8 +21,25 @@ $app->container->config = function () use ($config) {
 $app->container->singleton('github', function () {
     return new \Github\Client();
 });
+$app->container->singleton('asset', function () {
+    return new AssetService(
+        array('app' => __DIR__ . '/assets'),
+        'http://localhost/~zacharyrankin/boepi/web/assets',
+        array('debug' => false)
+    );
+});
 $app->githubClientId = $app->config['githubClientId'];
 $app->githubClientSecret = $app->config['githubClientSecret'];
+
+$app->get('/assets/:assetName', function ($name) use ($app) {
+    $assetResponse = $app->asset->getAssetResponse($name);
+
+    $app->response->setStatus($assetResponse->getStatusCode());
+    $app->response->headers->set('Content-Type', $assetResponse->headers->get('Content-Type'));
+    $app->response->setBody($assetResponse->getContent());
+
+    return $app->response;
+})->conditions(array('assetName' => '.*'));
 
 $app->get('/', function () use ($app) {
     $state = $_SESSION['state'] = rand();
@@ -37,7 +55,13 @@ $app->get('/', function () use ($app) {
     return $app->render(
         'index.html.php',
         array(
-            'authorizeUrl' => $authorizeUrl
+            'authorizeUrl' => $authorizeUrl,
+            'jsTag'        => function ($file) use ($app) {
+                return $app->asset->jsTag($file);
+            },
+            'cssTag'        => function ($file) use ($app) {
+                return $app->asset->cssTag($file);
+            },
         )
     );
 });
