@@ -32,11 +32,9 @@ $app->githubClientId = $app->config['githubClientId'];
 $app->githubClientSecret = $app->config['githubClientSecret'];
 
 $app->get('/assets/:assetName', function ($name) use ($app) {
-    $assetResponse = $app->asset->getAssetResponse($name);
-
-    $app->response->setStatus($assetResponse->getStatusCode());
-    $app->response->headers->set('Content-Type', $assetResponse->headers->get('Content-Type'));
-    $app->response->setBody($assetResponse->getContent());
+    $app->response->setStatus(200);
+    $app->response->headers->set('Content-Type', $app->asset->getContentType($name));
+    $app->response->setBody($app->asset->getContent($name));
 
     return $app->response;
 })->conditions(array('assetName' => '.*'));

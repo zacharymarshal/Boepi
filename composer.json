@@ -4,16 +4,6 @@
     "knplabs/github-api": "1.*",
     "slim/slim": "2.*",
     "gabordemooij/redbean": "dev-master",
-    "lightster/assetrinc": "0.0.4"
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "http://github.com/lightster/assetrinc"
-    },
-    {
-      "type": "vcs",
-      "url": "http://github.com/zacharyrankin/Sprocketeer"
-    }
-  ]
+    "lightster/assetrinc": "0.0.6"
+  }
 }
