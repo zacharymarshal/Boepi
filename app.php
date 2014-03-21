@@ -4,6 +4,7 @@ require_once 'vendor/autoload.php';
 
 use RedBean_Facade as R;
 use Lstr\Assetrinc\AssetService;
+use Mailgun\Mailgun;
 
 $config = include __DIR__ . '/config/core.php';
 $db_config = include __DIR__ . '/config/database.php';
@@ -30,6 +31,10 @@ $app->container->singleton('asset', function () {
 });
 $app->githubClientId = $app->config['githubClientId'];
 $app->githubClientSecret = $app->config['githubClientSecret'];
+$app->githubToken = $app->config['githubToken'];
+$app->container->singleton('mailgun', function ($app) {
+    return new Mailgun($app->config['mailgunApiKey']);
+});
 
 $app->get('/assets/:assetName', function ($name) use ($app) {
     $app->response->setStatus(200);

@@ -5,6 +5,7 @@
     }
   },
   "require": {
+    "mailgun/mailgun-php": "1.*",
     "guzzle/guzzle": "3.*",
     "knplabs/github-api": "1.*",
     "slim/slim": "2.*",

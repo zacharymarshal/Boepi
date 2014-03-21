@@ -8,6 +8,8 @@ use Symfony\Component\Console\Application;
 
 $notifyCommand = new NotifyCommand;
 $notifyCommand->setGithubClient($app->github);
+$notifyCommand->setGithubToken($app->githubToken);
+$notifyCommand->setMailgun($app->mailgun);
 
 $cli = new Application();
 $cli->add($notifyCommand);
